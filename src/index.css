@@ -146,6 +146,38 @@
   .marble-bg {
     background: var(--gradient-marble);
   }
+
+  .transform-3d {
+    transform-style: preserve-3d;
+  }
+
+  .perspective-500 {
+    perspective: 500px;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .rotate-y-6 {
+    transform: rotateY(6deg);
+  }
+
+  .rotate-y-12 {
+    transform: rotateY(12deg);
+  }
+
+  .-rotate-y-12 {
+    transform: rotateY(-12deg);
+  }
+
+  .rotate-x-12 {
+    transform: rotateX(12deg);
+  }
+
+  .-rotate-x-12 {
+    transform: rotateX(-12deg);
+  }
 }
 
 @layer utilities {
@@ -159,5 +191,65 @@
 
   .border-gold {
     border-color: hsl(var(--gold));
+  }
+
+  .text-royal-red {
+    color: hsl(var(--royal-red));
+  }
+
+  .bg-royal-red {
+    background-color: hsl(var(--royal-red));
+  }
+
+  .text-royal-red-dark {
+    color: hsl(var(--royal-red-dark));
+  }
+
+  .bg-royal-red-dark {
+    background-color: hsl(var(--royal-red-dark));
+  }
+
+  .text-cream {
+    color: hsl(var(--cream));
+  }
+
+  .bg-cream {
+    background-color: hsl(var(--cream));
+  }
+
+  .bg-gold-light {
+    background-color: hsl(var(--gold-light));
+  }
+
+  .from-gold {
+    --tw-gradient-from: hsl(var(--gold));
+  }
+
+  .to-gold {
+    --tw-gradient-to: hsl(var(--gold));
+  }
+
+  .to-gold-dark {
+    --tw-gradient-to: hsl(var(--gold-dark));
+  }
+
+  .from-gold-light {
+    --tw-gradient-from: hsl(var(--gold-light));
+  }
+
+  .to-gold-light {
+    --tw-gradient-to: hsl(var(--gold-light));
+  }
+
+  .from-royal-red-dark {
+    --tw-gradient-from: hsl(var(--royal-red-dark));
+  }
+
+  .to-royal-red-dark {
+    --tw-gradient-to: hsl(var(--royal-red-dark));
+  }
+
+  .via-gold-light {
+    --tw-gradient-via: hsl(var(--gold-light));
   }
 }
