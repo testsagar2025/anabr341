@@ -9,8 +9,8 @@ const Index = () => {
   return (
     <>
       <head>
-        <title>विपिन & प्रिया विवाह निमंत्रण | अप्रैल 2026</title>
-        <meta name="description" content="आप सादर आमंत्रित हैं - विपिन और प्रिया के विवाह समारोह में। 28 अप्रैल 2026" />
+        <title>Vipin & Priya Wedding Invitation | April 2026</title>
+        <meta name="description" content="You are cordially invited to celebrate the wedding of Vipin and Priya. April 28, 2026" />
       </head>
       
       <main className="min-h-screen bg-gradient-to-br from-background via-marble to-background relative overflow-hidden">
@@ -36,15 +36,15 @@ const Index = () => {
           <section className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
             <div className="w-full max-w-5xl">
               {/* Title Section */}
-            <div className="text-center mb-12 animate-fade-in">
+              <div className="text-center mb-12 animate-fade-in">
                 <div className="inline-block mb-4">
                   <p className="text-gold font-display text-xs md:text-sm tracking-[0.4em] uppercase mb-2">
-                    आप सादर आमंत्रित हैं
+                    You Are Cordially Invited To
                   </p>
                 </div>
                 
                 <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-royal-red mb-4 drop-shadow-lg">
-                  विपिन & प्रिया
+                  Vipin & Priya
                 </h1>
                 
                 <div className="flex items-center justify-center gap-4 mb-6">
@@ -54,7 +54,7 @@ const Index = () => {
                 </div>
                 
                 <p className="font-display text-lg md:text-xl text-muted-foreground tracking-wider">
-                  शुभ विवाह
+                  Wedding Celebration
                 </p>
               </div>
 
@@ -78,22 +78,21 @@ const Index = () => {
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-12">
                 <p className="text-gold font-display text-xs md:text-sm tracking-[0.3em] uppercase mb-2">
-                  कार्यक्रम
+                  The Celebration
                 </p>
                 <h2 className="font-script text-4xl md:text-6xl text-foreground">
-                  शुभ विवाह
+                  Wedding Day
                 </h2>
               </div>
 
               <div className="flex justify-center">
                 <EventCard
-                  title="पाणिग्रहण संस्कार"
-                  titleEn="Wedding Ceremony"
-                  date="28 अप्रैल 2026"
-                  day="मंगलवार"
-                  time="शुभ मुहूर्त"
+                  title="Wedding Ceremony"
+                  date="April 28, 2026"
+                  day="Tuesday"
+                  time="Auspicious Hour"
                   icon="🔥"
-                  description="पवित्र विवाह समारोह में आपकी उपस्थिति प्रार्थनीय है"
+                  description="Your gracious presence is requested at the sacred wedding ceremony"
                   delay={0}
                 />
               </div>
@@ -110,11 +109,11 @@ const Index = () => {
               </div>
               
               <p className="text-muted-foreground text-xs font-display tracking-wider">
-                अमंत्रण 3D इन्विटेशन स्टूडियो
+                Created with love by Amantran 3D Invitation Studio
               </p>
               
               <p className="text-muted-foreground/60 text-xs font-display tracking-wider mt-2">
-                © 2026 विपिन & प्रिया विवाह
+                © 2026 Vipin & Priya Wedding
               </p>
             </div>
           </footer>
@@ -126,7 +125,6 @@ const Index = () => {
 
 interface EventCardProps {
   title: string;
-  titleEn?: string;
   date: string;
   day: string;
   time: string;
@@ -135,7 +133,7 @@ interface EventCardProps {
   delay: number;
 }
 
-const EventCard = ({ title, titleEn, date, day, time, icon, description, delay }: EventCardProps) => (
+const EventCard = ({ title, date, day, time, icon, description, delay }: EventCardProps) => (
   <div 
     className="group relative animate-fade-in"
     style={{ animationDelay: `${delay}s` }}
@@ -155,15 +153,9 @@ const EventCard = ({ title, titleEn, date, day, time, icon, description, delay }
           {icon}
         </div>
         
-        <h3 className="font-display text-xl md:text-2xl text-foreground mb-1">
+        <h3 className="font-display text-xl md:text-2xl text-foreground mb-3">
           {title}
         </h3>
-        
-        {titleEn && (
-          <p className="text-gold/70 text-sm font-display mb-3">
-            {titleEn}
-          </p>
-        )}
         
         <p className="text-muted-foreground/80 text-sm mb-4">
           {description}

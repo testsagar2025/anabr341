@@ -6,7 +6,7 @@ interface VideoBannerProps {
   tagline?: string;
 }
 
-const VideoBanner = ({ onPlay, coupleName, tagline = "विवाह निमंत्रण" }: VideoBannerProps) => {
+const VideoBanner = ({ onPlay, coupleName, tagline = "Wedding Invitation" }: VideoBannerProps) => {
   return (
     <div className="absolute inset-0 z-20 bg-gradient-to-br from-royal-red-dark via-background to-royal-red-dark flex items-center justify-center cursor-pointer group"
       onClick={onPlay}
@@ -78,7 +78,7 @@ const VideoBanner = ({ onPlay, coupleName, tagline = "विवाह निम�
               </button>
               
               <p className="text-cream/60 font-display text-xs tracking-wider mt-4">
-                वीडियो देखें
+                Click to Play
               </p>
             </div>
           </div>
