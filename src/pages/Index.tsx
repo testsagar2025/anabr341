@@ -1,9 +1,9 @@
-import { Suspense, lazy, useState, useEffect, useCallback } from 'react';
+import { Suspense, lazy, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import CountdownTimer from "@/components/CountdownTimer";
 import WeddingVideoPlayer from "@/components/WeddingVideoPlayer";
 import Parallax3DWrapper from "@/components/Parallax3DWrapper";
-import CurtainReveal from "@/components/CurtainReveal";
+import InvitationEnvelope from "@/components/InvitationEnvelope";
 import { Calendar, Heart, Sparkles } from "lucide-react";
 import ganeshaImage from "@/assets/ganesha.png";
 import shlokImage from "@/assets/shlok.png";
@@ -13,23 +13,14 @@ const Scene3D = lazy(() => import("@/components/Scene3D"));
 
 const Index = () => {
   const [searchParams] = useSearchParams();
-  const [showCurtain, setShowCurtain] = useState(true);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [showEnvelope, setShowEnvelope] = useState(true);
   
   // Get guest name and family flag from URL parameters
   const guestName = searchParams.get('name') || '';
   const withFamily = searchParams.get('family') === 'true' || searchParams.has('family');
-  
-  // If no guest name, skip curtain animation
-  useEffect(() => {
-    if (!guestName) {
-      setShowCurtain(false);
-      setIsRevealed(true);
-    }
-  }, [guestName]);
 
-  const handleRevealComplete = useCallback(() => {
-    setIsRevealed(true);
+  const handleOpenInvitation = useCallback(() => {
+    setShowEnvelope(false);
   }, []);
   
   // Wedding date: April 28, 2026
@@ -260,19 +251,17 @@ const Index = () => {
         <meta name="description" content={`${guestName ? `Dear ${guestName}${withFamily ? ' & Family' : ''}, you` : 'You'} are cordially invited to celebrate the wedding of Vipin and Priya. April 28, 2026`} />
       </head>
       
-      {/* Curtain Animation for personalized invites */}
-      {guestName && showCurtain && (
-        <CurtainReveal 
+      {/* Personalized Invitation Envelope */}
+      {guestName && showEnvelope && (
+        <InvitationEnvelope 
           guestName={guestName} 
           withFamily={withFamily} 
-          onRevealComplete={handleRevealComplete}
-        >
-          {mainContent}
-        </CurtainReveal>
+          onOpen={handleOpenInvitation}
+        />
       )}
       
-      {/* Show main content after reveal or if no guest name */}
-      {isRevealed && mainContent}
+      {/* Main Content - show when envelope is opened or no guest name */}
+      {(!guestName || !showEnvelope) && mainContent}
     </>
   );
 };
