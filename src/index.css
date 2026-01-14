@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Tiro+Devanagari+Hindi:ital@0;1&family=Yatra+One&family=Hind:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -129,8 +129,23 @@
     font-family: 'Great Vibes', cursive;
   }
 
+  .font-script-hindi {
+    font-family: 'Yatra One', 'Tiro Devanagari Hindi', cursive;
+    letter-spacing: 0.02em;
+  }
+
   .font-display {
     font-family: 'Cinzel', serif;
+  }
+
+  .font-hindi {
+    font-family: 'Hind', 'Tiro Devanagari Hindi', sans-serif;
+    letter-spacing: 0;
+  }
+
+  .font-hindi-display {
+    font-family: 'Tiro Devanagari Hindi', serif;
+    letter-spacing: 0.01em;
   }
 
   .gold-border {
