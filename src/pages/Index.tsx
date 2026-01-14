@@ -7,7 +7,7 @@ import InvitationEnvelope from "@/components/InvitationEnvelope";
 import { Calendar, Heart, Sparkles, Loader2 } from "lucide-react";
 import ganeshaImage from "@/assets/ganesha.png";
 import shlokImage from "@/assets/shlok.png";
-import { useGuestData, eventNameHindi, eventIcons, eventDescriptions } from "@/hooks/useGuestData";
+import { useGuestData, eventNameHindi, eventIcons, eventDescriptions, eventDates } from "@/hooks/useGuestData";
 
 // Lazy load the 3D scene for better performance
 const Scene3D = lazy(() => import("@/components/Scene3D"));
@@ -35,7 +35,7 @@ const Index = () => {
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-[#722424] animate-spin mx-auto mb-4" />
-          <p className="font-display text-[#722424]/70 tracking-wider">
+          <p className="font-hindi text-[#722424]/70 tracking-wider text-lg">
             निमंत्रण पत्र लोड हो रहा है...
           </p>
         </div>
@@ -48,10 +48,10 @@ const Index = () => {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white">
         <div className="text-center max-w-md mx-6">
-          <p className="font-display text-[#722424] text-xl mb-2">
+          <p className="font-hindi-display text-[#722424] text-2xl mb-2">
             क्षमा करें
           </p>
-          <p className="text-[#722424]/60">
+          <p className="font-hindi text-[#722424]/60 text-lg">
             {error}
           </p>
         </div>
@@ -165,17 +165,17 @@ const Index = () => {
                   <div className="inline-block mb-4 animate-fade-in-down">
                     <div className="flex items-center justify-center gap-2 mb-2">
                       <Sparkles className="w-4 h-4 text-gold animate-twinkle" />
-                      <p className="text-gold font-display text-xs md:text-sm tracking-[0.3em]">
+                      <p className="text-gold font-script-hindi text-lg md:text-xl">
                         ॥ शुभ विवाह ॥
                       </p>
                       <Sparkles className="w-4 h-4 text-gold animate-twinkle" style={{ animationDelay: "0.5s" }} />
                     </div>
-                    <p className="text-gold/80 font-display text-xs tracking-[0.2em]">
+                    <p className="text-gold/80 font-hindi text-sm md:text-base">
                       आप सादर आमंत्रित हैं
                     </p>
                   </div>
                   
-                  <h1 className="font-script text-6xl md:text-8xl lg:text-9xl text-royal-red mb-6 drop-shadow-lg animate-fade-in-up text-shadow-elegant title-3d" style={{ animationDelay: "0.2s" }}>
+                  <h1 className="font-script-hindi text-5xl md:text-7xl lg:text-8xl text-royal-red mb-6 drop-shadow-lg animate-fade-in-up text-shadow-elegant title-3d" style={{ animationDelay: "0.2s" }}>
                     विपिन & प्रिया
                   </h1>
                   
@@ -185,7 +185,7 @@ const Index = () => {
                     <div className="h-px w-16 md:w-28 bg-gradient-to-l from-transparent via-gold to-gold" />
                   </div>
                   
-                  <p className="font-display text-lg md:text-xl text-muted-foreground tracking-wider animate-fade-in" style={{ animationDelay: "0.5s" }}>
+                  <p className="font-hindi text-lg md:text-xl text-muted-foreground animate-fade-in" style={{ animationDelay: "0.5s" }}>
                     विवाह समारोह
                   </p>
                 </div>
@@ -225,13 +225,13 @@ const Index = () => {
 
           {/* Events Section */}
           <section className="py-20 md:py-28 px-4">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <Parallax3DWrapper intensity={6}>
                 <div className="text-center mb-14">
-                  <p className="text-gold font-display text-xs md:text-sm tracking-[0.35em] uppercase mb-3 animate-fade-in">
+                  <p className="text-gold font-hindi text-sm md:text-base mb-3 animate-fade-in">
                     शुभ कार्यक्रम
                   </p>
-                  <h2 className="font-script text-5xl md:text-6xl lg:text-7xl text-foreground animate-fade-in-up title-3d" style={{ animationDelay: "0.1s" }}>
+                  <h2 className="font-script-hindi text-4xl md:text-5xl lg:text-6xl text-foreground animate-fade-in-up title-3d" style={{ animationDelay: "0.1s" }}>
                     {guestData ? 'आपके लिए आमंत्रण' : 'विवाह समारोह'}
                   </h2>
                   <div className="flex items-center justify-center gap-3 mt-4 animate-fade-in" style={{ animationDelay: "0.2s" }}>
@@ -243,37 +243,86 @@ const Index = () => {
               </Parallax3DWrapper>
 
               {/* Dynamic Events from API or Default */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto">
                 {guestData && guestData.events && guestData.events.length > 0 ? (
-                  // Show events from API
-                  guestData.events.map((event, index) => (
-                    <Parallax3DWrapper key={event} intensity={10} popOut>
-                      <EventCard
-                        title={eventNameHindi[event] || event}
-                        date="28 अप्रैल 2026"
-                        day="मंगलवार"
-                        time="शुभ मुहूर्त"
-                        icon={eventIcons[event] || '✨'}
-                        description={eventDescriptions[event] || 'आपकी उपस्थिति हमारे लिए सौभाग्य की बात होगी'}
-                        delay={0.3 + index * 0.1}
-                      />
-                    </Parallax3DWrapper>
-                  ))
+                  // Show events from API - sorted by date
+                  [...guestData.events]
+                    .sort((a, b) => {
+                      const order = ['rasum', 'tilak', 'haldi', 'mehndi', 'shadi'];
+                      return order.indexOf(a) - order.indexOf(b);
+                    })
+                    .map((event, index) => (
+                      <Parallax3DWrapper key={event} intensity={10} popOut>
+                        <EventCard
+                          title={eventNameHindi[event] || event}
+                          date={eventDates[event]?.date || '28 अप्रैल 2026'}
+                          day={eventDates[event]?.day || 'मंगलवार'}
+                          time="शुभ मुहूर्त"
+                          icon={eventIcons[event] || '✨'}
+                          description={eventDescriptions[event] || 'आपकी उपस्थिति हमारे लिए सौभाग्य की बात होगी'}
+                          delay={0.3 + index * 0.1}
+                        />
+                      </Parallax3DWrapper>
+                    ))
                 ) : (
-                  // Default event when no guest data
-                  <div className="md:col-span-2 flex justify-center">
+                  // Default events when no guest data
+                  <>
                     <Parallax3DWrapper intensity={10} popOut>
                       <EventCard
-                        title="शादी समारोह"
+                        title="रस्म"
+                        date="20 अप्रैल 2026"
+                        day="सोमवार"
+                        time="शुभ मुहूर्त"
+                        icon="🪷"
+                        description="शुभ रस्म में आपकी उपस्थिति से हमें अत्यंत प्रसन्नता होगी"
+                        delay={0.3}
+                      />
+                    </Parallax3DWrapper>
+                    <Parallax3DWrapper intensity={10} popOut>
+                      <EventCard
+                        title="तिलक"
+                        date="22 अप्रैल 2026"
+                        day="बुधवार"
+                        time="शुभ मुहूर्त"
+                        icon="🔴"
+                        description="तिलक की शुभ रस्म में आपको सादर आमंत्रित किया जाता है"
+                        delay={0.4}
+                      />
+                    </Parallax3DWrapper>
+                    <Parallax3DWrapper intensity={10} popOut>
+                      <EventCard
+                        title="हल्दी"
+                        date="26 अप्रैल 2026"
+                        day="रविवार"
+                        time="शुभ मुहूर्त"
+                        icon="🌻"
+                        description="हल्दी की रस्म में आपकी उपस्थिति हमें अत्यंत प्रसन्नता प्रदान करेगी"
+                        delay={0.5}
+                      />
+                    </Parallax3DWrapper>
+                    <Parallax3DWrapper intensity={10} popOut>
+                      <EventCard
+                        title="मेहंदी"
+                        date="27 अप्रैल 2026"
+                        day="सोमवार"
+                        time="शुभ मुहूर्त"
+                        icon="🌿"
+                        description="मेहंदी की खुशियों में शामिल होने के लिए आपको आमंत्रित किया जाता है"
+                        delay={0.6}
+                      />
+                    </Parallax3DWrapper>
+                    <Parallax3DWrapper intensity={10} popOut>
+                      <EventCard
+                        title="शादी"
                         date="28 अप्रैल 2026"
                         day="मंगलवार"
                         time="शुभ मुहूर्त"
                         icon="💒"
                         description="पवित्र विवाह समारोह में आपकी उपस्थिति हमारे लिए सौभाग्य की बात होगी"
-                        delay={0.3}
+                        delay={0.7}
                       />
                     </Parallax3DWrapper>
-                  </div>
+                  </>
                 )}
               </div>
             </div>
@@ -288,11 +337,11 @@ const Index = () => {
                 <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/40" />
               </div>
               
-              <p className="text-muted-foreground text-sm font-display tracking-wider mb-2">
+              <p className="text-muted-foreground text-sm font-hindi mb-2">
                 अमंत्रण 3D इनविटेशन स्टूडियो द्वारा निर्मित
               </p>
               
-              <p className="text-muted-foreground/60 text-xs font-display tracking-wider">
+              <p className="text-muted-foreground/60 text-xs font-hindi">
                 © 2026 विपिन & प्रिया विवाह
               </p>
             </div>
@@ -341,35 +390,35 @@ const EventCard = ({ title, date, day, time, icon, description, delay }: EventCa
     <div className="absolute -inset-2 bg-gradient-to-br from-gold/25 via-gold-light/15 to-gold/25 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
     
     {/* Card */}
-    <div className="relative elegant-card rounded-2xl p-6 md:p-8 text-center group-hover:shadow-3d-hover transition-all duration-500 group-hover:-translate-y-2 overflow-hidden card-3d">
+    <div className="relative elegant-card rounded-2xl p-5 md:p-6 text-center group-hover:shadow-3d-hover transition-all duration-500 group-hover:-translate-y-2 overflow-hidden card-3d h-full">
       {/* Decorative Corners */}
-      <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/40 group-hover:border-gold/70 rounded-tl-2xl transition-colors duration-500" />
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold/40 group-hover:border-gold/70 rounded-tr-2xl transition-colors duration-500" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/40 group-hover:border-gold/70 rounded-bl-2xl transition-colors duration-500" />
-      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/40 group-hover:border-gold/70 rounded-br-2xl transition-colors duration-500" />
+      <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-gold/40 group-hover:border-gold/70 rounded-tl-2xl transition-colors duration-500" />
+      <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-gold/40 group-hover:border-gold/70 rounded-tr-2xl transition-colors duration-500" />
+      <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-gold/40 group-hover:border-gold/70 rounded-bl-2xl transition-colors duration-500" />
+      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-gold/40 group-hover:border-gold/70 rounded-br-2xl transition-colors duration-500" />
       
       {/* Content */}
       <div className="relative z-10">
-        <div className="text-4xl md:text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-500">
+        <div className="text-3xl md:text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-500">
           {icon}
         </div>
         
-        <h3 className="font-display text-lg md:text-xl text-foreground mb-3 tracking-wide">
+        <h3 className="font-script-hindi text-2xl md:text-3xl text-foreground mb-2">
           {title}
         </h3>
         
-        <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+        <p className="font-hindi text-muted-foreground text-sm mb-3 leading-relaxed">
           {description}
         </p>
         
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-1.5">
           <Calendar className="w-4 h-4 text-gold" />
-          <p className="text-gold font-display text-sm font-semibold tracking-wide">
+          <p className="text-gold font-hindi text-sm font-semibold">
             {date}
           </p>
         </div>
         
-        <p className="text-muted-foreground text-xs uppercase tracking-[0.15em]">
+        <p className="font-hindi text-muted-foreground text-xs">
           {day} • {time}
         </p>
       </div>
