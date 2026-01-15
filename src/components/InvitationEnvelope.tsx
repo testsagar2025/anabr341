@@ -55,49 +55,71 @@ const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
 
         {/* Card Content */}
         <div className="bg-white rounded-sm shadow-[0_4px_40px_rgba(114,36,36,0.08)] p-6 sm:p-8 md:p-12 text-center border border-[#722424]/10">
-          {/* Top Ornament */}
-          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4 md:mb-6 animate-fade-in">
-            <span className="text-[#722424]/60 text-sm md:text-base">✦</span>
-            <p className="font-script-hindi text-lg sm:text-xl md:text-2xl text-[#722424]/80">
-              ॥ शुभ विवाह ॥
-            </p>
-            <span className="text-[#722424]/60 text-sm md:text-base">✦</span>
+          {/* Shubh Vivah Header */}
+          <p className="font-script-hindi text-xl sm:text-2xl md:text-3xl text-[#722424] mb-3 md:mb-4 animate-fade-in">
+            ॥ शुभ विवाह ॥
+          </p>
+
+          {/* Decorative Stars */}
+          <div className="flex items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <span className="text-[#722424]/60 text-xs md:text-sm">✦</span>
+            <span className="text-[#722424]/60 text-xs md:text-sm">✦</span>
+            <span className="text-[#722424]/60 text-xs md:text-sm">✦</span>
           </div>
 
           {/* Invitation Text */}
-          <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <p className="font-hindi text-base md:text-lg text-[#722424]/80 mb-2">
-              आमंत्रण
+          <div className="mb-4 md:mb-6 space-y-1 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <p className="font-hindi text-sm md:text-base text-[#722424]/80">
+              हम सपरिवार
             </p>
-            <p className="font-hindi text-xs sm:text-sm md:text-base text-[#722424]/60 max-w-sm mx-auto leading-relaxed">
-              हम सादर आमंत्रित करते हैं आपको एवं आपके परिवार को विवाह संस्कार में
+            <p className="font-hindi text-sm md:text-base text-[#722424]/80">
+              आपको सादर आमंत्रित करते हैं
             </p>
           </div>
 
           {/* Guest Name */}
           <h1 
-            className="font-script-hindi text-2xl sm:text-3xl md:text-5xl text-[#722424] mb-4 md:mb-6 animate-fade-in-up leading-tight"
+            className="font-script-hindi text-2xl sm:text-3xl md:text-4xl text-[#722424] mb-3 md:mb-4 animate-fade-in-up leading-tight"
             style={{ animationDelay: '0.3s' }}
           >
-            श्री {displayName}
+            श्री {displayName} को
           </h1>
 
-          {/* Couple Names */}
-          <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <p className="font-script-hindi text-xl sm:text-2xl md:text-3xl text-[#722424]/80 mb-2">
-              विपिन & प्रिया
+          {/* Wedding Invitation Text */}
+          <div className="mb-4 md:mb-6 space-y-1 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <p className="font-hindi text-sm md:text-base text-[#722424]/80">
+              अपने शुभ विवाह समारोह में
             </p>
-            <p className="font-hindi text-xs sm:text-sm text-[#722424]/50">
-              के पवित्र विवाह समारोह में शामिल होने के लिए
+            <p className="font-hindi text-sm md:text-base text-[#722424]/80">
+              पधारकर हमें कृतार्थ करने हेतु।
             </p>
           </div>
 
+          {/* Divider */}
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-4 md:mb-5 animate-fade-in" style={{ animationDelay: '0.45s' }}>
+            <div className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent to-[#722424]/30" />
+            <span className="text-[#722424]/40 text-xs md:text-sm">❧</span>
+            <div className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-[#722424]/30" />
+          </div>
+
+          {/* Couple Names */}
+          <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <p className="font-script-hindi text-2xl sm:text-3xl md:text-4xl text-[#722424]/90 mb-2">
+              विपिन & प्रिया
+            </p>
+          </div>
+
+          {/* Events Header */}
+          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-2 animate-fade-in" style={{ animationDelay: '0.55s' }}>
+            आप स्नेहपूर्वक निम्नलिखित वैवाहिक
+          </p>
+          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-3 md:mb-4 animate-fade-in" style={{ animationDelay: '0.55s' }}>
+            कार्यक्रमों में आमंत्रित हैं
+          </p>
+
           {/* Events invited to */}
           {guestData.events && guestData.events.length > 0 && (
-            <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <p className="font-hindi text-[#722424]/50 text-xs mb-3">
-                आप निम्नलिखित कार्यक्रमों में आमंत्रित हैं
-              </p>
+            <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
               <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
                 {[...guestData.events]
                   .sort((a, b) => {
@@ -110,7 +132,7 @@ const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
                       className="inline-flex flex-col items-center px-2 sm:px-3 py-1.5 sm:py-2 bg-[#722424]/5 border border-[#722424]/15 rounded-lg"
                     >
                       <span className="text-base sm:text-lg mb-0.5">{eventIcons[event] || '✨'}</span>
-                      <span className="font-hindi text-[#722424]/80 text-[10px] sm:text-xs font-medium">{eventNameHindi[event] || event}</span>
+                      <span className="font-hindi text-[#722424]/80 text-[10px] sm:text-xs font-medium">{eventNameHindi[event] || event} समारोह</span>
                       <span className="font-hindi text-[#722424]/50 text-[9px] sm:text-[10px]">{eventDates[event]?.date || ''}</span>
                     </span>
                   ))}
