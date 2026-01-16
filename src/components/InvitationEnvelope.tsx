@@ -102,24 +102,17 @@ const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
             <div className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-[#722424]/30" />
           </div>
 
-          {/* Couple Names */}
-          <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-            <p className="font-script-hindi text-2xl sm:text-3xl md:text-4xl text-[#722424]/90 mb-2">
-              विपिन & प्रिया
-            </p>
-          </div>
-
           {/* Events Header */}
-          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-2 animate-fade-in" style={{ animationDelay: '0.55s' }}>
+          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-2 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             आप स्नेहपूर्वक निम्नलिखित वैवाहिक
           </p>
-          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-3 md:mb-4 animate-fade-in" style={{ animationDelay: '0.55s' }}>
+          <p className="font-hindi text-sm md:text-base text-[#722424]/70 mb-3 md:mb-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             कार्यक्रमों में आमंत्रित हैं
           </p>
 
-          {/* Events invited to */}
+          {/* Events invited to - without emojis */}
           {guestData.events && guestData.events.length > 0 && (
-            <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <div className="mb-4 md:mb-6 animate-fade-in" style={{ animationDelay: '0.55s' }}>
               <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
                 {[...guestData.events]
                   .sort((a, b) => {
@@ -129,10 +122,9 @@ const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
                   .map((event) => (
                     <span 
                       key={event}
-                      className="inline-flex flex-col items-center px-2 sm:px-3 py-1.5 sm:py-2 bg-[#722424]/5 border border-[#722424]/15 rounded-lg"
+                      className="inline-flex flex-col items-center px-2.5 sm:px-3 py-1.5 sm:py-2 bg-[#722424]/5 border border-[#722424]/15 rounded-lg"
                     >
-                      <span className="text-base sm:text-lg mb-0.5">{eventIcons[event] || '✨'}</span>
-                      <span className="font-hindi text-[#722424]/80 text-[10px] sm:text-xs font-medium">{eventNameHindi[event] || event} समारोह</span>
+                      <span className="font-hindi text-[#722424]/90 text-[10px] sm:text-xs font-medium">{eventNameHindi[event] || event} समारोह</span>
                       <span className="font-hindi text-[#722424]/50 text-[9px] sm:text-[10px]">{eventDates[event]?.date || ''}</span>
                     </span>
                   ))}
