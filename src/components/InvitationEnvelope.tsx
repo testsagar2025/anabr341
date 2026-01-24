@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { GuestData, eventNameHindi, eventIcons, eventDates } from '@/hooks/useGuestData';
+import { GuestData, eventNameHindi, eventDates } from '@/hooks/useGuestData';
+import { useHindiName } from '@/hooks/useHindiName';
+import { Loader2 } from 'lucide-react';
 
 interface InvitationEnvelopeProps {
   guestData: GuestData;
@@ -8,16 +10,13 @@ interface InvitationEnvelopeProps {
 
 const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
   const [isOpening, setIsOpening] = useState(false);
-
-  // Convert name to Hindi display
-  const getHindiName = (name: string) => {
-    // The name from API is in English, display as is but with Hindi styling
-    return name;
-  };
+  
+  // Translate guest name to Hindi using AI
+  const { hindiName, loading: nameLoading } = useHindiName(guestData.name);
   
   const displayName = guestData.type === 'family' 
-    ? `${getHindiName(guestData.name)} एवं परिवार` 
-    : getHindiName(guestData.name);
+    ? `${hindiName || guestData.name} एवं परिवार` 
+    : (hindiName || guestData.name);
 
   const handleOpen = () => {
     setIsOpening(true);
@@ -84,12 +83,19 @@ const InvitationEnvelope = ({ guestData, onOpen }: InvitationEnvelopeProps) => {
           </div>
 
           {/* Guest Name */}
-          <h1 
-            className="font-script-hindi text-2xl sm:text-3xl md:text-4xl text-[#722424] mb-3 md:mb-4 animate-fade-in-up leading-tight"
-            style={{ animationDelay: '0.3s' }}
-          >
-            श्री {displayName} को
-          </h1>
+          {nameLoading ? (
+            <div className="flex items-center justify-center gap-2 mb-3 md:mb-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <Loader2 className="w-5 h-5 text-[#722424] animate-spin" />
+              <span className="font-hindi text-sm text-[#722424]/60">नाम अनुवाद हो रहा है...</span>
+            </div>
+          ) : (
+            <h1 
+              className="font-script-hindi text-2xl sm:text-3xl md:text-4xl text-[#722424] mb-3 md:mb-4 animate-fade-in-up leading-tight"
+              style={{ animationDelay: '0.3s' }}
+            >
+              श्री {displayName} को
+            </h1>
+          )}
 
           {/* Wedding Invitation Text */}
           <div className="mb-4 md:mb-6 space-y-1 animate-fade-in" style={{ animationDelay: '0.4s' }}>
