@@ -409,8 +409,8 @@ const Index = () => {
 
               {/* Credit Section */}
               <div className="pt-4 border-t border-gold/10">
-                <p className="font-hindi text-gold/70 text-xs md:text-sm tracking-wider">
-                  अवधारणा • डिज़ाइन • विकास
+                <p className="text-gold/70 text-xs md:text-sm tracking-widest font-medium">
+                  Concept • Design • Development
                 </p>
                 <p className="font-script-hindi text-[#722424]/80 text-base md:text-lg mt-1.5 hover:text-[#722424] transition-colors duration-300">
                   आर्यन गुप्ता
