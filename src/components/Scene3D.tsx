@@ -1,35 +1,28 @@
 import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Sparkles, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Floating particle component - golden particles
+// Floating particle component
 const FloatingParticle = ({ position, delay = 0 }: { position: [number, number, number]; delay?: number }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.4 + delay) * 0.4;
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.15 + delay;
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2 + delay) * 0.2;
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5 + delay) * 0.3;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.2 + delay;
     }
   });
 
   return (
     <mesh ref={meshRef} position={position}>
-      <octahedronGeometry args={[0.06, 0]} />
-      <meshStandardMaterial 
-        color="#DAA520" 
-        emissive="#DAA520" 
-        emissiveIntensity={0.6} 
-        metalness={0.9} 
-        roughness={0.1} 
-      />
+      <octahedronGeometry args={[0.08, 0]} />
+      <meshStandardMaterial color="#d4af37" emissive="#d4af37" emissiveIntensity={0.5} metalness={0.8} roughness={0.2} />
     </mesh>
   );
 };
 
-// Floating heart shape - warm tones
+// Floating heart shape
 const FloatingHeart = ({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
@@ -46,21 +39,21 @@ const FloatingHeart = ({ position, scale = 1 }: { position: [number, number, num
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.25) * 0.3;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.4) * 0.25;
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.3;
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
     }
   });
 
   return (
-    <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.4}>
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
       <mesh ref={meshRef} position={position} scale={scale} rotation={[0, 0, Math.PI]}>
         <shapeGeometry args={[heartShape]} />
         <meshStandardMaterial 
-          color="#8B4513" 
-          emissive="#8B4513" 
-          emissiveIntensity={0.35} 
-          metalness={0.6} 
-          roughness={0.25}
+          color="#8b1538" 
+          emissive="#8b1538" 
+          emissiveIntensity={0.3} 
+          metalness={0.5} 
+          roughness={0.3}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -68,50 +61,21 @@ const FloatingHeart = ({ position, scale = 1 }: { position: [number, number, num
   );
 };
 
-// Decorative ring - golden
+// Decorative ring
 const DecorativeRing = ({ position, rotation }: { position: [number, number, number]; rotation: [number, number, number] }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.08;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.1;
     }
   });
 
   return (
     <mesh ref={meshRef} position={position} rotation={rotation}>
-      <torusGeometry args={[0.35, 0.025, 16, 100]} />
-      <meshStandardMaterial 
-        color="#DAA520" 
-        emissive="#DAA520" 
-        emissiveIntensity={0.5} 
-        metalness={0.95} 
-        roughness={0.05} 
-      />
+      <torusGeometry args={[0.3, 0.02, 16, 100]} />
+      <meshStandardMaterial color="#d4af37" emissive="#d4af37" emissiveIntensity={0.4} metalness={0.9} roughness={0.1} />
     </mesh>
-  );
-};
-
-// Floating Diya (lamp) light effect
-const DiyaLight = ({ position }: { position: [number, number, number] }) => {
-  const lightRef = useRef<THREE.PointLight>(null);
-  
-  useFrame((state) => {
-    if (lightRef.current) {
-      // Flickering effect
-      lightRef.current.intensity = 1.5 + Math.sin(state.clock.elapsedTime * 8) * 0.3 + Math.sin(state.clock.elapsedTime * 12) * 0.15;
-    }
-  });
-
-  return (
-    <pointLight 
-      ref={lightRef}
-      position={position} 
-      intensity={1.5} 
-      color="#FF8C00" 
-      distance={8}
-      decay={2}
-    />
   );
 };
 
@@ -119,73 +83,41 @@ const DiyaLight = ({ position }: { position: [number, number, number] }) => {
 const SceneContent = () => {
   return (
     <>
-      {/* Ambient and directional lights - warm tones */}
-      <ambientLight intensity={0.25} color="#FFE4B5" />
-      <directionalLight position={[10, 10, 5]} intensity={0.8} color="#FFF5E1" />
-      <pointLight position={[-5, 5, 5]} intensity={0.6} color="#DAA520" />
-      <pointLight position={[5, -5, 5]} intensity={0.4} color="#8B4513" />
+      {/* Ambient and directional lights */}
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[10, 10, 5]} intensity={1} color="#fff5e6" />
+      <pointLight position={[-5, 5, 5]} intensity={0.5} color="#d4af37" />
+      <pointLight position={[5, -5, 5]} intensity={0.3} color="#8b1538" />
       
-      {/* Diya lights for warm ambiance */}
-      <DiyaLight position={[-6, -3, 2]} />
-      <DiyaLight position={[6, -3, 2]} />
-      <DiyaLight position={[0, -4, 3]} />
+      {/* Stars background */}
+      <Stars radius={50} depth={50} count={1000} factor={3} saturation={0} fade speed={0.5} />
       
-      {/* Stars background - warmer tones */}
-      <Stars 
-        radius={60} 
-        depth={60} 
-        count={800} 
-        factor={3} 
-        saturation={0.3} 
-        fade 
-        speed={0.3} 
-      />
-      
-      {/* Golden sparkles - more prominent */}
-      <Sparkles 
-        count={100} 
-        scale={18} 
-        size={2.5} 
-        speed={0.2} 
-        color="#DAA520" 
-      />
-      
-      {/* Additional warm sparkles */}
-      <Sparkles 
-        count={50} 
-        scale={15} 
-        size={1.5} 
-        speed={0.15} 
-        color="#FF8C00" 
-      />
+      {/* Golden sparkles */}
+      <Sparkles count={80} scale={15} size={2} speed={0.3} color="#d4af37" />
       
       {/* Floating particles */}
-      {Array.from({ length: 25 }).map((_, i) => (
+      {Array.from({ length: 20 }).map((_, i) => (
         <FloatingParticle
           key={i}
           position={[
-            (Math.random() - 0.5) * 12,
             (Math.random() - 0.5) * 10,
-            (Math.random() - 0.5) * 6 - 3
+            (Math.random() - 0.5) * 8,
+            (Math.random() - 0.5) * 5 - 2
           ]}
-          delay={i * 0.4}
+          delay={i * 0.5}
         />
       ))}
       
-      {/* Floating hearts - positioned around edges */}
-      <FloatingHeart position={[-4, 2.5, -4]} scale={0.45} />
-      <FloatingHeart position={[4, -1.5, -5]} scale={0.35} />
-      <FloatingHeart position={[-3, -2.5, -3]} scale={0.28} />
-      <FloatingHeart position={[3.5, 2, -4]} scale={0.32} />
-      <FloatingHeart position={[-5, 0, -4]} scale={0.25} />
-      <FloatingHeart position={[5, 0.5, -3.5]} scale={0.3} />
+      {/* Floating hearts */}
+      <FloatingHeart position={[-3, 2, -3]} scale={0.5} />
+      <FloatingHeart position={[3, -1, -4]} scale={0.4} />
+      <FloatingHeart position={[-2, -2, -2]} scale={0.3} />
+      <FloatingHeart position={[2.5, 1.5, -3]} scale={0.35} />
       
       {/* Decorative rings */}
-      <DecorativeRing position={[-5, 1, -6]} rotation={[Math.PI / 4, 0, 0]} />
-      <DecorativeRing position={[5, 1.5, -5]} rotation={[0, Math.PI / 4, Math.PI / 6]} />
-      <DecorativeRing position={[0, -4, -7]} rotation={[Math.PI / 3, Math.PI / 4, 0]} />
-      <DecorativeRing position={[-4, -2, -5]} rotation={[Math.PI / 5, 0, Math.PI / 4]} />
-      <DecorativeRing position={[4, -2.5, -6]} rotation={[0, Math.PI / 3, Math.PI / 5]} />
+      <DecorativeRing position={[-4, 0, -5]} rotation={[Math.PI / 4, 0, 0]} />
+      <DecorativeRing position={[4, 1, -4]} rotation={[0, Math.PI / 4, Math.PI / 6]} />
+      <DecorativeRing position={[0, -3, -6]} rotation={[Math.PI / 3, Math.PI / 4, 0]} />
     </>
   );
 };
@@ -194,7 +126,7 @@ const Scene3D = () => {
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <Canvas
-        camera={{ position: [0, 0, 10], fov: 45 }}
+        camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
         style={{ background: 'transparent' }}
       >
