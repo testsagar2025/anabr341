@@ -406,13 +406,6 @@ const Index = () => {
               <p className="text-muted-foreground/60 text-xs md:text-sm font-hindi mb-6">
                 © 2026 विपिन & प्रिया विवाह
               </p>
-
-              {/* Credit Section */}
-              <div className="pt-4 border-t border-gold/10">
-                <p className="font-script-hindi text-[#722424]/80 text-base md:text-lg hover:text-[#722424] transition-colors duration-300">
-                  आर्यन गुप्ता
-                </p>
-              </div>
             </div>
           </footer>
         </div>
