@@ -99,89 +99,76 @@ const EventDetailDialog = ({ isOpen, onClose, event, icon, description }: EventD
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg w-[calc(100%-2rem)] mx-auto bg-gradient-to-br from-cream via-white to-cream-dark border-0 rounded-3xl p-0 overflow-hidden shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-radial from-gold/20 to-transparent rounded-full blur-2xl animate-pulse-soft" />
-          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-radial from-royal-red/10 to-transparent rounded-full blur-2xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
-        </div>
-
-        {/* Photo Gallery Section */}
+        {/* Banner Photo Section */}
         {photos.length > 0 && (
-          <div className="relative w-full aspect-[4/3] overflow-hidden">
-            <img 
-              src={photos[currentPhotoIndex]} 
-              alt={`${event.title} समारोह`}
-              className="w-full h-full object-cover"
-            />
-            
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            
-            {/* Photo Navigation */}
-            {photos.length > 1 && (
-              <>
-                <button 
-                  onClick={handlePrevPhoto}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/40 transition-all duration-300"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={handleNextPhoto}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/40 transition-all duration-300"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-                
-                {/* Photo Indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {photos.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentPhotoIndex(idx)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        idx === currentPhotoIndex 
-                          ? 'bg-white w-6' 
-                          : 'bg-white/50 hover:bg-white/70'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+          <div className="relative w-full">
+            {/* Banner Image - wide cinematic ratio */}
+            <div className="relative w-full aspect-[16/9] overflow-hidden">
+              <img 
+                src={photos[currentPhotoIndex]} 
+                alt={`${event.title} समारोह`}
+                className="w-full h-full object-cover object-center"
+              />
+              
+              {/* Dark cinematic overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
+              
+              {/* Vignette effect */}
+              <div className="absolute inset-0" style={{
+                background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)'
+              }} />
 
-            {/* Event Icon & Title Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-center">
-              <div className="inline-block mb-3">
-                <div className="text-4xl md:text-5xl filter drop-shadow-lg animate-float">{icon}</div>
-              </div>
-              <DialogHeader>
-                <DialogTitle className="font-script-hindi text-2xl md:text-3xl text-white mb-1 drop-shadow-lg">
-                  {event.title} समारोह
-                </DialogTitle>
-                <DialogDescription className="font-hindi text-gold text-sm md:text-base font-medium tracking-wide drop-shadow-md">
-                  {event.date} • {event.day}
-                </DialogDescription>
-              </DialogHeader>
+              {/* Subtle gold light streaks */}
+              <div className="absolute inset-0 opacity-20" style={{
+                background: 'linear-gradient(135deg, transparent 30%, hsla(45, 85%, 50%, 0.15) 50%, transparent 70%)'
+              }} />
+              
+              {/* Photo Navigation */}
+              {photos.length > 1 && (
+                <>
+                  <button 
+                    onClick={handlePrevPhoto}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/50 transition-all duration-300 border border-white/10"
+                  >
+                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+                  </button>
+                  <button 
+                    onClick={handleNextPhoto}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/50 transition-all duration-300 border border-white/10"
+                  >
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                  </button>
+                  
+                  {/* Photo Indicators */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {photos.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentPhotoIndex(idx)}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          idx === currentPhotoIndex 
+                            ? 'bg-gold w-6' 
+                            : 'bg-white/40 w-1.5 hover:bg-white/60'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
 
-        {/* Fallback Header when no photos */}
-        {photos.length === 0 && (
-          <div className="relative bg-gradient-to-br from-[#722424] via-[#8a2c2c] to-[#5a1c1c] p-6 md:p-8 text-center overflow-hidden">
-            <div className="absolute inset-0 opacity-15" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L55 30L30 55L5 30z' fill='none' stroke='%23d4af37' stroke-width='0.5'/%3E%3Ccircle cx='30' cy='30' r='8' fill='none' stroke='%23d4af37' stroke-width='0.3'/%3E%3C/svg%3E")`,
-              backgroundSize: '60px 60px',
-            }} />
-            
-            <div className="relative inline-block mb-4">
-              <div className="absolute inset-0 bg-gold/20 rounded-full blur-xl animate-pulse-soft scale-150" />
-              <div className="relative text-5xl md:text-6xl animate-float filter drop-shadow-lg">{icon}</div>
-            </div>
-            
+        {/* All Text Content Below Photo */}
+        <div className="relative px-5 pt-5 pb-6 md:px-6 md:pt-6 md:pb-8 space-y-4">
+          {/* Decorative glow */}
+          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-40 h-40 bg-gradient-radial from-gold/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+          {/* Event Icon & Title */}
+          <div className="text-center relative">
+            <div className="text-4xl md:text-5xl mb-3 animate-float filter drop-shadow-lg">{icon}</div>
             <DialogHeader>
-              <DialogTitle className="font-script-hindi text-2xl md:text-3xl lg:text-4xl text-white mb-2 drop-shadow-lg">
+              <DialogTitle className="font-script-hindi text-2xl md:text-3xl text-foreground mb-1">
                 {event.title} समारोह
               </DialogTitle>
               <DialogDescription className="font-hindi text-gold text-sm md:text-base font-medium tracking-wide">
@@ -189,70 +176,65 @@ const EventDetailDialog = ({ isOpen, onClose, event, icon, description }: EventD
               </DialogDescription>
             </DialogHeader>
           </div>
-        )}
 
-        {/* Content Section */}
-        <div className="relative p-5 md:p-6 space-y-4">
+          {/* Elegant Divider */}
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/50 to-gold/30" />
+            <span className="text-gold text-lg animate-pulse-soft">❧</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent via-gold/50 to-gold/30" />
+          </div>
+
           {/* Description */}
           <div className="relative p-4 bg-gradient-to-br from-gold/5 to-transparent rounded-2xl border border-gold/10">
             <Sparkles className="absolute top-3 right-3 w-4 h-4 text-gold/30" />
-            <p className="font-hindi text-[#722424]/80 text-sm md:text-base leading-relaxed text-center italic">
+            <p className="font-hindi text-foreground/70 text-sm md:text-base leading-relaxed text-center italic">
               "{description}"
             </p>
           </div>
 
-          {/* Elegant Divider */}
-          <div className="flex items-center justify-center gap-3 py-2">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent via-gold/50 to-gold/30" />
-            <span className="text-gold text-lg animate-pulse-soft">❧</span>
-            <div className="h-px w-16 bg-gradient-to-l from-transparent via-gold/50 to-gold/30" />
-          </div>
-
-          {/* Info Cards Container */}
+          {/* Info Cards */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Timing Card */}
             {details?.timing && (
-              <div className="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-[#722424]/8 to-transparent rounded-2xl border border-[#722424]/15 hover:border-[#722424]/30 transition-all duration-300 hover:shadow-lg">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#722424] to-[#8a2c2c] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Clock className="w-5 h-5 text-white" />
+              <div className="group flex flex-col items-center gap-2 p-3 md:p-4 bg-gradient-to-br from-royal-red/5 to-transparent rounded-2xl border border-royal-red/10 hover:border-royal-red/25 transition-all duration-300">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
                 </div>
                 <div className="text-center">
-                  <p className="font-hindi text-[#722424]/50 text-[10px] uppercase tracking-wider mb-1">समय</p>
-                  <p className="font-hindi text-[#722424] text-sm font-semibold">{details.timing}</p>
+                  <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">समय</p>
+                  <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{details.timing}</p>
                 </div>
               </div>
             )}
 
-            {/* Location Card */}
             {details?.location && (
-              <div className="group flex flex-col items-center gap-2 p-4 bg-gradient-to-br from-[#722424]/8 to-transparent rounded-2xl border border-[#722424]/15 hover:border-[#722424]/30 transition-all duration-300 hover:shadow-lg">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#722424] to-[#8a2c2c] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MapPin className="w-5 h-5 text-white" />
+              <div className="group flex flex-col items-center gap-2 p-3 md:p-4 bg-gradient-to-br from-royal-red/5 to-transparent rounded-2xl border border-royal-red/10 hover:border-royal-red/25 transition-all duration-300">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5 text-white" />
                 </div>
                 <div className="text-center">
-                  <p className="font-hindi text-[#722424]/50 text-[10px] uppercase tracking-wider mb-1">स्थान</p>
-                  <p className="font-hindi text-[#722424] text-sm font-semibold">{details.location}</p>
+                  <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">स्थान</p>
+                  <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{details.location}</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Additional Info Cards (for Shadi) */}
+          {/* Additional Info (Shadi) */}
           {details?.additionalInfo && details.additionalInfo.length > 0 && (
-            <div className="space-y-3 pt-2">
+            <div className="space-y-3 pt-1">
               <p className="font-hindi text-gold text-xs uppercase tracking-wider text-center">विशेष जानकारी</p>
-              <div className="grid gap-3">
+              <div className="grid gap-2.5">
                 {details.additionalInfo.map((info, idx) => (
                   <div 
                     key={idx} 
-                    className="group flex items-center gap-4 p-4 bg-gradient-to-r from-gold/10 via-gold/5 to-transparent rounded-2xl border border-gold/20 hover:border-gold/40 transition-all duration-300 hover:shadow-lg"
+                    className="group flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-gold/8 via-gold/4 to-transparent rounded-2xl border border-gold/15 hover:border-gold/30 transition-all duration-300"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-lg text-royal-red-dark group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-lg text-royal-red-dark group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                       {getIcon(info.icon)}
                     </div>
-                    <div className="flex-1">
-                      <p className="font-hindi text-[#722424]/50 text-[10px] uppercase tracking-wider mb-0.5">{info.label}</p>
-                      <p className="font-hindi text-[#722424] text-sm md:text-base font-semibold">{info.value}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">{info.label}</p>
+                      <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{info.value}</p>
                     </div>
                   </div>
                 ))}
