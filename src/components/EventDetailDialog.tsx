@@ -27,7 +27,6 @@ export interface EventDetail {
   }[];
 }
 
-// Event details configuration with photos
 export const eventDetails: Record<string, Omit<EventDetail, 'eventKey' | 'title' | 'date' | 'day'>> = {
   rasum: {
     timing: 'रात्रि ८:०० बजे से',
@@ -98,29 +97,21 @@ const EventDetailDialog = ({ isOpen, onClose, event, icon, description }: EventD
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg w-[calc(100%-2rem)] mx-auto bg-gradient-to-br from-cream via-white to-cream-dark border-0 rounded-3xl p-0 overflow-hidden shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
-        {/* Banner Photo Section */}
+      <DialogContent className="max-w-md w-[calc(100%-2rem)] mx-auto bg-gradient-to-br from-cream via-white to-cream-dark border-0 rounded-3xl p-0 overflow-hidden shadow-2xl animate-scale-in max-h-[90vh] overflow-y-auto">
+        {/* Banner Photo - fully visible */}
         {photos.length > 0 && (
-          <div className="relative w-full">
-            {/* Banner Image - wide cinematic ratio */}
-            <div className="relative w-full aspect-[16/9] overflow-hidden">
+          <div className="relative w-full bg-black/5">
+            <div className="relative w-full overflow-hidden">
+              {/* Full photo - object-contain ensures nothing is cropped */}
               <img 
                 src={photos[currentPhotoIndex]} 
                 alt={`${event.title} समारोह`}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-auto max-h-[50vh] object-contain mx-auto"
               />
               
-              {/* Dark cinematic overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
-              
-              {/* Vignette effect */}
-              <div className="absolute inset-0" style={{
-                background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)'
-              }} />
-
-              {/* Subtle gold light streaks */}
-              <div className="absolute inset-0 opacity-20" style={{
-                background: 'linear-gradient(135deg, transparent 30%, hsla(45, 85%, 50%, 0.15) 50%, transparent 70%)'
+              {/* Subtle dark gradient at edges only */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.12) 100%)'
               }} />
               
               {/* Photo Navigation */}
@@ -128,27 +119,26 @@ const EventDetailDialog = ({ isOpen, onClose, event, icon, description }: EventD
                 <>
                   <button 
                     onClick={handlePrevPhoto}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/50 transition-all duration-300 border border-white/10"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/40 transition-all duration-300"
                   >
-                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+                    <ChevronLeft className="w-4 h-4" />
                   </button>
                   <button 
                     onClick={handleNextPhoto}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/50 transition-all duration-300 border border-white/10"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/40 transition-all duration-300"
                   >
-                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                   
-                  {/* Photo Indicators */}
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
                     {photos.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentPhotoIndex(idx)}
                         className={`h-1.5 rounded-full transition-all duration-300 ${
                           idx === currentPhotoIndex 
-                            ? 'bg-gold w-6' 
-                            : 'bg-white/40 w-1.5 hover:bg-white/60'
+                            ? 'bg-gold w-5' 
+                            : 'bg-black/30 w-1.5 hover:bg-black/50'
                         }`}
                       />
                     ))}
@@ -159,86 +149,73 @@ const EventDetailDialog = ({ isOpen, onClose, event, icon, description }: EventD
           </div>
         )}
 
-        {/* All Text Content Below Photo */}
-        <div className="relative px-5 pt-5 pb-6 md:px-6 md:pt-6 md:pb-8 space-y-4">
-          {/* Decorative glow */}
-          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-40 h-40 bg-gradient-radial from-gold/15 to-transparent rounded-full blur-3xl pointer-events-none" />
-
+        {/* Text Content */}
+        <div className="relative px-5 pt-4 pb-6 md:px-6 md:pb-7 space-y-3.5">
           {/* Event Icon & Title */}
-          <div className="text-center relative">
-            <div className="text-4xl md:text-5xl mb-3 animate-float filter drop-shadow-lg">{icon}</div>
+          <div className="text-center">
+            <div className="text-3xl md:text-4xl mb-2 animate-float">{icon}</div>
             <DialogHeader>
-              <DialogTitle className="font-script-hindi text-2xl md:text-3xl text-foreground mb-1">
+              <DialogTitle className="font-script-hindi text-xl md:text-2xl text-foreground mb-0.5">
                 {event.title} समारोह
               </DialogTitle>
-              <DialogDescription className="font-hindi text-gold text-sm md:text-base font-medium tracking-wide">
+              <DialogDescription className="font-hindi text-gold text-sm font-medium tracking-wide">
                 {event.date} • {event.day}
               </DialogDescription>
             </DialogHeader>
           </div>
 
-          {/* Elegant Divider */}
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-gold/50 to-gold/30" />
-            <span className="text-gold text-lg animate-pulse-soft">❧</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent via-gold/50 to-gold/30" />
+          {/* Divider */}
+          <div className="flex items-center justify-center gap-2">
+            <div className="h-px w-10 bg-gradient-to-r from-transparent to-gold/40" />
+            <span className="text-gold text-sm">❧</span>
+            <div className="h-px w-10 bg-gradient-to-l from-transparent to-gold/40" />
           </div>
 
           {/* Description */}
-          <div className="relative p-4 bg-gradient-to-br from-gold/5 to-transparent rounded-2xl border border-gold/10">
-            <Sparkles className="absolute top-3 right-3 w-4 h-4 text-gold/30" />
-            <p className="font-hindi text-foreground/70 text-sm md:text-base leading-relaxed text-center italic">
-              "{description}"
-            </p>
-          </div>
+          <p className="font-hindi text-foreground/65 text-sm leading-relaxed text-center italic px-2">
+            "{description}"
+          </p>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2.5">
             {details?.timing && (
-              <div className="group flex flex-col items-center gap-2 p-3 md:p-4 bg-gradient-to-br from-royal-red/5 to-transparent rounded-2xl border border-royal-red/10 hover:border-royal-red/25 transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              <div className="flex flex-col items-center gap-1.5 p-3 bg-royal-red/5 rounded-xl border border-royal-red/10">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-white" />
                 </div>
-                <div className="text-center">
-                  <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">समय</p>
-                  <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{details.timing}</p>
-                </div>
+                <p className="font-hindi text-muted-foreground text-[9px] uppercase tracking-wider">समय</p>
+                <p className="font-hindi text-foreground text-xs font-semibold text-center">{details.timing}</p>
               </div>
             )}
-
             {details?.location && (
-              <div className="group flex flex-col items-center gap-2 p-3 md:p-4 bg-gradient-to-br from-royal-red/5 to-transparent rounded-2xl border border-royal-red/10 hover:border-royal-red/25 transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <MapPin className="w-4 h-4 md:w-5 md:h-5 text-white" />
+              <div className="flex flex-col items-center gap-1.5 p-3 bg-royal-red/5 rounded-xl border border-royal-red/10">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-royal-red to-royal-red-dark flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-white" />
                 </div>
-                <div className="text-center">
-                  <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">स्थान</p>
-                  <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{details.location}</p>
-                </div>
+                <p className="font-hindi text-muted-foreground text-[9px] uppercase tracking-wider">स्थान</p>
+                <p className="font-hindi text-foreground text-xs font-semibold text-center">{details.location}</p>
               </div>
             )}
           </div>
 
           {/* Additional Info (Shadi) */}
           {details?.additionalInfo && details.additionalInfo.length > 0 && (
-            <div className="space-y-3 pt-1">
-              <p className="font-hindi text-gold text-xs uppercase tracking-wider text-center">विशेष जानकारी</p>
-              <div className="grid gap-2.5">
-                {details.additionalInfo.map((info, idx) => (
-                  <div 
-                    key={idx} 
-                    className="group flex items-center gap-3 p-3 md:p-4 bg-gradient-to-r from-gold/8 via-gold/4 to-transparent rounded-2xl border border-gold/15 hover:border-gold/30 transition-all duration-300"
-                  >
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-lg text-royal-red-dark group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                      {getIcon(info.icon)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-hindi text-muted-foreground text-[10px] uppercase tracking-wider mb-0.5">{info.label}</p>
-                      <p className="font-hindi text-foreground text-xs md:text-sm font-semibold">{info.value}</p>
-                    </div>
+            <div className="space-y-2 pt-1">
+              <p className="font-hindi text-gold text-[10px] uppercase tracking-wider text-center">विशेष जानकारी</p>
+              {details.additionalInfo.map((info, idx) => (
+                <div 
+                  key={idx} 
+                  className="flex items-center gap-3 p-3 bg-gold/5 rounded-xl border border-gold/10"
+                >
+                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-royal-red-dark flex-shrink-0">
+                    {getIcon(info.icon)}
                   </div>
-                ))}
-              </div>
+                  <div className="min-w-0">
+                    <p className="font-hindi text-muted-foreground text-[9px] uppercase tracking-wider">{info.label}</p>
+                    <p className="font-hindi text-foreground text-xs font-semibold">{info.value}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
