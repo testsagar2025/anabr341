@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Play, Pause, Volume2, VolumeX, Maximize, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, SkipBack, SkipForward } from "lucide-react";
 
-// Declare YouTube IFrame API types
 declare global {
   interface Window {
     YT: any;
@@ -95,10 +94,13 @@ const WeddingVideoPlayer = () => {
     const handler = () => {
       const fs = !!document.fullscreenElement;
       setIsFullscreen(fs);
-      // Auto landscape hint via CSS is handled below
     };
     document.addEventListener("fullscreenchange", handler);
-    return () => document.removeEventListener("fullscreenchange", handler);
+    document.addEventListener("webkitfullscreenchange", handler);
+    return () => {
+      document.removeEventListener("fullscreenchange", handler);
+      document.removeEventListener("webkitfullscreenchange", handler);
+    };
   }, []);
 
   const formatTime = (s: number) => {
@@ -139,27 +141,25 @@ const WeddingVideoPlayer = () => {
 
   const toggleFullscreen = useCallback(() => {
     if (!containerRef.current) return;
+    const el = containerRef.current as any;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch(() => {});
+      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     } else {
-      document.exitFullscreen().catch(() => {});
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
     }
   }, []);
 
   // Double-tap / double-click for fullscreen
-  const handleDoubleTap = useCallback(() => {
-    toggleFullscreen();
-  }, [toggleFullscreen]);
-
   const handleVideoAreaClick = (e: React.MouseEvent) => {
     const now = Date.now();
     if (now - lastTapRef.current < 350) {
-      handleDoubleTap();
+      toggleFullscreen();
       lastTapRef.current = 0;
       return;
     }
     lastTapRef.current = now;
-    // Single tap: toggle play/pause
     setTimeout(() => {
       if (lastTapRef.current !== 0) handlePlay();
     }, 360);
@@ -176,12 +176,16 @@ const WeddingVideoPlayer = () => {
   return (
     <div
       ref={containerRef}
-      className={`relative rounded-xl md:rounded-2xl overflow-hidden shadow-3d transform-3d hover:shadow-3d-hover transition-all duration-500 ${isFullscreen ? "!rounded-none" : ""}`}
+      className={`video-player-container relative overflow-hidden transition-all duration-300 ${
+        isFullscreen 
+          ? "fixed inset-0 z-[9999] rounded-none bg-black" 
+          : "rounded-xl md:rounded-2xl shadow-3d"
+      }`}
       onMouseMove={handleMouseMove}
+      onTouchStart={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
-      style={isFullscreen ? { width: "100vw", height: "100vh" } : {}}
     >
-      {/* 3D Frame */}
+      {/* 3D Frame - only when not fullscreen */}
       {!isFullscreen && (
         <>
           <div className="absolute -inset-1 bg-gradient-to-r from-gold via-gold-light to-gold rounded-xl md:rounded-2xl opacity-75 blur-sm" />
@@ -190,67 +194,59 @@ const WeddingVideoPlayer = () => {
       )}
 
       {/* Inner Container */}
-      <div className={`relative z-10 overflow-hidden ${isFullscreen ? "w-full h-full" : "rounded-xl md:rounded-2xl border-2 border-gold/60"}`}>
-        {/* Corner Decorations */}
-        <div className="absolute top-2 left-2 text-gold text-sm md:text-base z-40 pointer-events-none drop-shadow-gold animate-twinkle">✿</div>
-        <div className="absolute top-2 right-2 text-gold text-sm md:text-base z-40 pointer-events-none drop-shadow-gold animate-twinkle" style={{ animationDelay: "0.5s" }}>✿</div>
-        <div className="absolute bottom-12 left-2 text-gold text-sm md:text-base z-40 pointer-events-none drop-shadow-gold animate-twinkle" style={{ animationDelay: "1s" }}>✿</div>
-        <div className="absolute bottom-12 right-2 text-gold text-sm md:text-base z-40 pointer-events-none drop-shadow-gold animate-twinkle" style={{ animationDelay: "1.5s" }}>✿</div>
-
-        {/* Video Area */}
-        <div className={`relative bg-[hsl(345,65%,15%)] ${isFullscreen ? "w-full h-full" : "aspect-video"}`}>
-
+      <div className={`relative z-10 overflow-hidden ${
+        isFullscreen 
+          ? "w-full h-full flex items-center justify-center bg-black" 
+          : "rounded-xl md:rounded-2xl border-2 border-gold/60"
+      }`}>
+        {/* Video Area - shorter on mobile, proper aspect ratio on desktop */}
+        <div className={`relative bg-black ${
+          isFullscreen 
+            ? "w-full h-full" 
+            : "aspect-[16/9] md:aspect-video"
+        }`}>
           {/* Pre-play overlay */}
           {!started && (
             <div
               className="absolute inset-0 z-30 flex flex-col items-center justify-center cursor-pointer group"
               onClick={handlePlay}
             >
-              {/* Background pattern */}
               <div className="absolute inset-0 bg-[hsl(345,65%,15%)]" />
               <div className="absolute inset-0 opacity-[0.07]" style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='1'%3E%3Cpath d='M20 0L40 20L20 40L0 20z' fill='none' stroke='%23d4af37' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E")`,
               }} />
-              {/* Subtle corner ornaments */}
-              <div className="absolute top-4 left-4 md:top-6 md:left-6 text-gold/40 text-lg md:text-xl">❧</div>
-              <div className="absolute top-4 right-4 md:top-6 md:right-6 text-gold/40 text-lg md:text-xl scale-x-[-1]">❧</div>
-              <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-gold/40 text-lg md:text-xl scale-y-[-1]">❧</div>
-              <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 text-gold/40 text-lg md:text-xl scale-[-1]">❧</div>
-
-              {/* Inner frame lines */}
-              <div className="absolute top-8 left-8 right-8 bottom-8 md:top-12 md:left-12 md:right-12 md:bottom-12 border border-gold/15 rounded-lg pointer-events-none" />
-
+              
               {/* Content */}
               <div className="relative text-center z-10">
-                <p className="text-gold/70 text-[10px] md:text-xs tracking-[0.35em] uppercase font-display mb-2 md:mb-3">
-                  ✦ Wedding Invitation ✦
+                <p className="text-gold/70 text-[10px] md:text-xs tracking-[0.35em] uppercase font-display mb-2">
+                  ✦ Wedding Film ✦
                 </p>
-                <h2 className="font-script-hindi text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gold mb-4 md:mb-6 drop-shadow-[0_2px_15px_hsla(45,85%,50%,0.3)]">
+                <h2 className="font-script-hindi text-2xl sm:text-3xl md:text-5xl text-gold mb-3 md:mb-5 drop-shadow-[0_2px_15px_hsla(45,85%,50%,0.3)]">
                   Vipin & Priya
                 </h2>
-                <div className="flex items-center justify-center gap-2 md:gap-3 mb-6 md:mb-8">
+                <div className="flex items-center justify-center gap-2 mb-4 md:mb-6">
                   <div className="h-px w-8 md:w-14 bg-gradient-to-r from-transparent to-gold/50" />
-                  <span className="text-gold text-xs md:text-sm">✦</span>
+                  <span className="text-gold text-xs">✦</span>
                   <div className="h-px w-8 md:w-14 bg-gradient-to-l from-transparent to-gold/50" />
                 </div>
 
                 {/* Play button */}
                 <div className="relative inline-block">
                   <div className="absolute inset-0 bg-gold/20 rounded-full blur-2xl scale-[2] animate-pulse-soft" />
-                  <div className="relative w-14 h-14 md:w-[72px] md:h-[72px] rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-[0_0_30px_hsla(45,85%,50%,0.3)] group-hover:scale-110 transition-transform duration-300 border-2 border-gold-light/50">
-                    <Play className="w-6 h-6 md:w-8 md:h-8 text-royal-red-dark ml-0.5" fill="currentColor" />
+                  <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-[0_0_30px_hsla(45,85%,50%,0.3)] group-hover:scale-110 transition-transform duration-300 border-2 border-gold-light/50">
+                    <Play className="w-5 h-5 md:w-7 md:h-7 text-royal-red-dark ml-0.5" fill="currentColor" />
                   </div>
                 </div>
-                <p className="text-gold/50 text-[10px] md:text-xs tracking-[0.25em] uppercase mt-3 md:mt-4 font-display">
-                  Click to Play
+                <p className="text-gold/50 text-[9px] md:text-xs tracking-[0.25em] uppercase mt-2 md:mt-3 font-display">
+                  Tap to Play
                 </p>
               </div>
             </div>
           )}
 
-          {/* YouTube Player (hidden until started) */}
+          {/* YouTube Player */}
           <div
-            className={`w-full h-full ${!started ? "invisible absolute" : ""}`}
+            className={`absolute inset-0 ${!started ? "invisible" : ""}`}
             onClick={handleVideoAreaClick}
           >
             <div ref={playerDivRef} className="w-full h-full" />
@@ -259,25 +255,16 @@ const WeddingVideoPlayer = () => {
           {/* Pause overlay */}
           {started && !isPlaying && showControls && (
             <div
-              className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] cursor-pointer"
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[2px] cursor-pointer"
               onClick={handleVideoAreaClick}
             >
-              <div className="text-gold/60 text-[10px] md:text-xs tracking-[0.3em] uppercase font-display mb-2 bg-gold/10 px-3 py-1 rounded-full border border-gold/20">
-                ॥ Paused ॥
-              </div>
-              <p className="text-gold/50 text-[10px] md:text-xs tracking-[0.2em] uppercase font-display mb-3">
-                Wedding Invitation
-              </p>
-              <h3 className="font-script-hindi text-2xl md:text-4xl text-gold mb-4 drop-shadow-lg">
-                Vipin & Priya
-              </h3>
               <div className="relative">
                 <div className="absolute inset-0 bg-gold/20 rounded-full blur-xl scale-[1.8] animate-pulse-soft" />
-                <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-xl border-2 border-gold-light/40">
-                  <Play className="w-6 h-6 md:w-7 md:h-7 text-royal-red-dark ml-0.5" fill="currentColor" />
+                <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center shadow-xl border-2 border-gold-light/40">
+                  <Play className="w-5 h-5 md:w-6 md:h-6 text-royal-red-dark ml-0.5" fill="currentColor" />
                 </div>
               </div>
-              <p className="text-gold/40 text-[10px] md:text-xs tracking-[0.2em] uppercase mt-3 font-display">
+              <p className="text-gold/50 text-[9px] md:text-xs tracking-[0.2em] uppercase mt-2 font-display">
                 Tap to Resume
               </p>
             </div>
@@ -293,81 +280,73 @@ const WeddingVideoPlayer = () => {
 
           {/* Custom Controls Bar */}
           {started && (
-            <div className={`absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ${showControls ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+            <div className={`absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ${showControls ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}`}>
               {/* Progress Bar */}
               <div
-                className="relative w-full h-1.5 md:h-2 cursor-pointer group/progress px-0"
+                className="relative w-full h-1 md:h-1.5 cursor-pointer group/progress"
                 onClick={handleProgressClick}
               >
-                <div className="absolute inset-0 bg-white/15" />
+                <div className="absolute inset-0 bg-white/20" />
                 <div
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-gold to-gold-light rounded-r-full transition-all duration-100"
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-gold to-gold-light transition-all duration-100"
                   style={{ width: `${progress}%` }}
                 />
-                {/* Scrubber dot */}
                 <div
-                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 md:w-3.5 md:h-3.5 bg-gold rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity duration-200 -ml-1.5"
+                  className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 md:w-3 md:h-3 bg-gold rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity -ml-1"
                   style={{ left: `${progress}%` }}
                 />
               </div>
 
-              {/* Time labels above bar */}
-              <div className="absolute -top-5 left-2 right-2 flex justify-between pointer-events-none">
-                <span className="text-white/50 text-[9px] md:text-[10px] font-mono">{formatTime(currentTime)}</span>
-                <span className="text-white/50 text-[9px] md:text-[10px] font-mono">{formatTime(duration)}</span>
-              </div>
-
               {/* Controls */}
-              <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-gradient-to-t from-black/70 via-black/50 to-transparent">
+              <div className="flex items-center gap-1 px-2 md:px-3 py-1 md:py-1.5 bg-gradient-to-t from-black/80 to-black/40">
                 {/* Play/Pause */}
                 <button
                   onClick={(e) => { e.stopPropagation(); handlePlay(); }}
-                  className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gold flex items-center justify-center hover:bg-gold-light transition-colors shadow-lg flex-shrink-0"
+                  className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-gold/90 flex items-center justify-center hover:bg-gold transition-colors flex-shrink-0"
                 >
                   {isPlaying
-                    ? <Pause className="w-4 h-4 md:w-5 md:h-5 text-royal-red-dark" fill="currentColor" />
-                    : <Play className="w-4 h-4 md:w-5 md:h-5 text-royal-red-dark ml-0.5" fill="currentColor" />
+                    ? <Pause className="w-3.5 h-3.5 md:w-4 md:h-4 text-royal-red-dark" fill="currentColor" />
+                    : <Play className="w-3.5 h-3.5 md:w-4 md:h-4 text-royal-red-dark ml-0.5" fill="currentColor" />
                   }
                 </button>
 
                 {/* Skip Back */}
                 <button
                   onClick={(e) => { e.stopPropagation(); skip(-10); }}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
                 >
-                  <SkipBack className="w-4 h-4" />
+                  <SkipBack className="w-3 h-3 md:w-4 md:h-4" />
                 </button>
 
                 {/* Skip Forward */}
                 <button
                   onClick={(e) => { e.stopPropagation(); skip(10); }}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
                 >
-                  <SkipForward className="w-4 h-4" />
+                  <SkipForward className="w-3 h-3 md:w-4 md:h-4" />
                 </button>
 
                 {/* Volume */}
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleMute(); }}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
                 >
-                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  {isMuted ? <VolumeX className="w-3 h-3 md:w-4 md:h-4" /> : <Volume2 className="w-3 h-3 md:w-4 md:h-4" />}
                 </button>
 
-                {/* Time display */}
-                <span className="text-white/60 text-[10px] md:text-xs font-mono ml-1 whitespace-nowrap">
+                {/* Time */}
+                <span className="text-white/60 text-[9px] md:text-[11px] font-mono ml-0.5 whitespace-nowrap">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
 
-                {/* Spacer */}
                 <div className="flex-1" />
 
                 {/* Fullscreen */}
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
-                  className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
+                  className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-white/70 hover:text-white transition-colors flex-shrink-0"
                 >
-                  <Maximize className="w-4 h-4" />
+                  {isFullscreen ? <Minimize className="w-3 h-3 md:w-4 md:h-4" /> : <Maximize className="w-3 h-3 md:w-4 md:h-4" />}
                 </button>
               </div>
             </div>
@@ -375,29 +354,42 @@ const WeddingVideoPlayer = () => {
         </div>
       </div>
 
-      {/* CSS for fullscreen landscape on mobile */}
+      {/* Fullscreen landscape CSS for mobile */}
       <style>{`
-        @media (max-width: 768px) {
-          div:fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-          }
-          div:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-          }
+        .video-player-container:fullscreen {
+          width: 100vw !important;
+          height: 100vh !important;
         }
-        div:fullscreen iframe,
-        div:-webkit-full-screen iframe {
+        .video-player-container:-webkit-full-screen {
+          width: 100vw !important;
+          height: 100vh !important;
+        }
+        .video-player-container:fullscreen iframe,
+        .video-player-container:-webkit-full-screen iframe {
           width: 100% !important;
           height: 100% !important;
+          position: absolute;
+          top: 0;
+          left: 0;
         }
-        @media screen and (orientation: portrait) {
-          div:fullscreen {
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+          .video-player-container:fullscreen {
             transform: rotate(90deg);
             transform-origin: center center;
             width: 100vh !important;
             height: 100vw !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+          }
+          .video-player-container:-webkit-full-screen {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh !important;
+            height: 100vw !important;
+            position: fixed;
+            top: 0;
+            left: 0;
           }
         }
       `}</style>

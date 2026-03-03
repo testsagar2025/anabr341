@@ -111,8 +111,8 @@ const Index = () => {
         {/* Content */}
         <div className="relative" style={{ zIndex: 10 }}>
           {/* Hero Section */}
-          <section className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
-            <div className="w-full max-w-5xl">
+          <section className="min-h-screen flex flex-col items-center justify-center px-3 md:px-4 py-10 md:py-16">
+            <div className="w-full max-w-4xl">
               {/* Ganesha & Shlok Section */}
               <Parallax3DWrapper intensity={8} className="mb-10">
                 <div className="ganesha-section text-center">
@@ -224,30 +224,15 @@ const Index = () => {
                 </div>
               </Parallax3DWrapper>
 
-              {/* Video Player with 3D pop-out effect */}
-              <div className="mb-16 animate-slide-up" style={{ animationDelay: "0.6s" }}>
-                <Parallax3DWrapper intensity={12} perspective={1500} popOut className="video-3d-container">
-                  <div className="video-3d-wrapper">
-                    {/* 3D Shadow layers */}
-                    <div className="video-shadow-layer video-shadow-1" />
-                    <div className="video-shadow-layer video-shadow-2" />
-                    <div className="video-shadow-layer video-shadow-3" />
-                    
-                    {/* Main video */}
-                    <div className="video-main-layer">
-                      <WeddingVideoPlayer />
-                    </div>
-                    
-                    {/* 3D Frame overlay */}
-                    <div className="video-frame-3d" />
-                  </div>
-                </Parallax3DWrapper>
+              {/* Video Player */}
+              <div className="mb-10 md:mb-16 animate-slide-up px-1 md:px-0" style={{ animationDelay: "0.6s" }}>
+                <WeddingVideoPlayer />
               </div>
             </div>
           </section>
 
           {/* Countdown Section */}
-          <section className="py-20 md:py-28 relative">
+          <section className="py-12 md:py-20 relative">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-card/60 to-transparent" />
             <div className="relative z-10">
               <Parallax3DWrapper intensity={5}>
