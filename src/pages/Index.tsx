@@ -325,6 +325,17 @@ const Index = () => {
                   <span className="text-gold text-sm md:text-base">✦</span>
                   <div className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-gold/60" />
                 </div>
+
+                {/* Haldi Poem */}
+                <div className="mt-4 md:mt-6 bg-gradient-to-br from-gold/5 to-gold/10 rounded-xl p-3 md:p-4 border border-gold/15 max-w-md mx-auto animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                  <p className="font-hindi text-xs sm:text-sm text-foreground/75 leading-relaxed italic">
+                    "हल्दी है, चन्दन है, दो रिश्तों का बन्धन है<br />
+                    मेरे चाचू की शादी में आपका अभिनन्दन है..."
+                  </p>
+                  <p className="font-hindi text-[10px] sm:text-xs text-gold/70 mt-1.5">
+                    — नन्ही परी मानवी गुप्ता
+                  </p>
+                </div>
               </div>
             </Parallax3DWrapper>
 
